@@ -1,0 +1,121 @@
+﻿@model IEnumerable<SpecCourse_Lab2WithAuth.Models.Book>
+
+
+@{
+    ViewBag.Title = "All books";
+}
+
+<h2>All books</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+        $(document).ready(function () {
+            var oTable = $('#BooksTable').dataTable();
+
+            $('td.BookTitle > label', oTable.fnGetNodes()).editable('Book/EditTitle',
+                {
+                    "callback": function (sValue, y) {
+                        var aPos = oTable.fnGetPosition(this);
+                        oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+                    },
+                    "submit": "Ok",
+                    "submitdata": function (value, settings) {
+                        return {
+                            "id": this.parentNode.getAttribute('book_id')
+                        };
+                    },
+                    "height": "30px"
+                });
+
+            $('td.BookCode > label', oTable.fnGetNodes()).editable('Book/EditCode',
+                {
+                    "callback": function (sValue, y) {
+                        var aPos = oTable.fnGetPosition(this);
+                        oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+                    },
+                    "submit": "Ok",
+                    "submitdata": function (value, settings) {
+                        return {
+                            "id": this.parentNode.getAttribute('book_id')
+                        };
+                    },
+                    "height": "30px"
+                });
+
+            $('td.BookDate > label', oTable.fnGetNodes()).editable('Book/EditDate',
+                {
+                    "callback": function (sValue, y) {
+                        var aPos = oTable.fnGetPosition(this);
+                        oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+                    },
+                    "submit": "Ok",
+                    "submitdata": function (value, settings) {
+                        return {
+                            "id": this.parentNode.getAttribute('book_id')
+                        };
+                    },
+                    "height": "30px",
+                    "width" : "100px"
+
+                });
+        });
+    </script>    
+}
+
+<table class="table table-hover" id="BooksTable">
+    <thead>
+    <tr>
+        <th>
+            Title
+        </th>
+        <th>
+            Authors
+        </th>
+        <th>
+            Publishing date (yyyy-mm-dd)
+        </th>
+        <th>
+            Details
+        </th>
+        <th></th>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <th></th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="BookTitle" book_id="@item.Id">
+                    <label>@item.Title</label>
+                </td>
+                <td>
+                    @foreach (var author in item.Authors.ToList())
+                    {
+                        <p>@Html.ActionLink(@author.Name, "Details", "Author", new { id = author.Id }, null)</p>
+                    }
+                </td>
+                <td class="BookDate" book_id="@item.Id">
+                    <label>@Html.DisplayFor(modelItem => item.PublishingDate)</label>
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.ActionLink("Get the book!", "Content", new { id = item.Id })
+                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <td>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    </td>
+                }
+            </tr>
+        }
+
+    </tbody>
+</table>

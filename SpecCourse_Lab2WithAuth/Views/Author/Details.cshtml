@@ -1,0 +1,43 @@
+﻿@model SpecCourse_Lab2WithAuth.Models.Author
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Author</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.BirthDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BirthDate)
+    </div>
+</fieldset>
+
+@if (Model.Books != null) { 
+<fieldset>
+    <legend>Books, written by @Model.Name</legend>
+   @foreach (var book in Model.Books)
+   {
+       <div class="display-field">
+            @Html.ActionLink(book.Title, "Details", "Book", new { id = book.Id }, null)
+       </div>
+   }
+</fieldset>
+}
+<p>
+    @if (User.Identity.IsAuthenticated) {
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id })
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

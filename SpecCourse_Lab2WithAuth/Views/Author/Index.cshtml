@@ -1,0 +1,87 @@
+﻿@model IEnumerable<SpecCourse_Lab2WithAuth.Models.Author>
+
+@{
+    ViewBag.Title = "All authors";
+}
+
+<h2>All authors</h2>
+
+@if (User.Identity.IsAuthenticated)
+{
+<script>
+    $(document).ready(function () {
+        var oTable = $('#AuthorsTable').dataTable();
+
+        $('td.AuthorName > label', oTable.fnGetNodes()).editable('Author/EditName',
+            {
+                "callback": function (sValue, y) {
+                    var aPos = oTable.fnGetPosition(this);
+                    oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+                },
+                "submit": "Ok",
+                "submitdata": function (value, settings) {
+                    return {
+                        "id": this.parentNode.getAttribute('author_id')
+                    };
+                },
+                "height": "30px"
+            });
+
+        $('td.AuthorDate > label', oTable.fnGetNodes()).editable('Author/EditDate',
+            {
+                "callback": function (sValue, y) {
+                    var aPos = oTable.fnGetPosition(this);
+                    oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+                },
+                "submit": "Ok",
+                "submitdata": function (value, settings) {
+                    return {
+                        "id": this.parentNode.getAttribute('author_id')
+                    };
+                },
+                "height": "30px",
+                "width" : "100px"
+
+            });
+    });
+</script>    
+}
+
+<table id="AuthorsTable" class="table table-hover">
+    <thead>
+    <tr>
+        <th>
+            Author name
+        </th>
+        <th>
+            Birth date (yyyy-mm-dd)
+        </th>
+        <th>Details</th>
+        @if (User.Identity.IsAuthenticated) {
+        <th></th>
+        }
+    </tr>
+    </thead>
+
+    <tbody>
+@foreach (var item in Model) { 
+    <tr>
+        <td class="AuthorName" author_id="@item.Id" >
+            <label>@Html.DisplayFor(modelItem => @item.Name)</label>
+        </td>
+        <td class="AuthorDate" author_id="@item.Id">
+            <label>@Html.DisplayFor(modelItem => item.BirthDate)</label>
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new {id = item.Id}) 
+        </td>
+        @if (User.Identity.IsAuthenticated) {
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        }
+    </tr>
+}
+    </tbody>
+
+</table>

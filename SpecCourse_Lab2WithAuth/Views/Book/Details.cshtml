@@ -1,0 +1,50 @@
+﻿@model SpecCourse_Lab2WithAuth.Models.Book
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Book</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Title)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Title)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PublishingDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PublishingDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.BookCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BookCode)
+    </div>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.Authors)
+    </div>
+    <div class="display-field">
+        @foreach (var author in Model.Authors.ToList())
+        {
+            <p>@Html.ActionLink(author.Name, "Details", "Author", new {id = author.Id}, null)</p>
+        }
+    </div>
+
+</fieldset>
+@Html.ActionLink("Get the book!", "Content", new  { id = Model.Id })
+<p>
+    @if (User.Identity.IsAuthenticated) {
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id })
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>
